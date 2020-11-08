@@ -20,7 +20,21 @@ jobs:
           remote_port: ${{ secrets.DEPLOY_PORT }}
           remote_user: ${{ secrets.DEPLOY_USER }}
           remote_key: ${{ secrets.DEPLOY_KEY }}
-      - name: Message Slack
+      - name: Notify Slack Success
+        if: ${{ success() }}
         uses: rtCamp/action-slack-notify@master
         env:
+          SLACK_COLOR: '#008000'
+          SLACK_MESSAGE: 'The build was successful'
+          SLACK_TITLE: Success
+          SLACK_USERNAME: pearl
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+      - name: Notify Slack failure
+        if: ${{ failure() }}
+        uses: rtCamp/action-slack-notify@master
+        env:
+          SLACK_COLOR: 'FF0000'
+          SLACK_MESSAGE: 'The build failed'
+          SLACK_TITLE: Failed
+          SLACK_USERNAME: pearl
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
